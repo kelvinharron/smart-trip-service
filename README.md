@@ -1,2 +1,3 @@
 # majorproject
-masters major project
+
+Itinerary application built using node + express + mongo.
