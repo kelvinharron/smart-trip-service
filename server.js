@@ -2,7 +2,7 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser').urlencoded({extended:true});
 var mongoose = require('mongoose');
 var socketio = require('socket.io');
 var passport = require('passport');
@@ -10,23 +10,22 @@ var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyCgrqJvbZQyT6WqOzu4UI7hWA4i0qpNo3U'
 });
 
-
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/itineraryapp');
 var db = mongoose.connection;
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+
 
 // my dependencies used for file paths and port number
 var itineraryController = require('./controllers/itinerary');
 var eventController = require('./controllers/event');
 var LOCALHOST_PORT = 54321;
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 // routing
 app.use('/api', router);
-
 
 // itinerary routes
 router.route('/itinerary').get(itineraryController.getAllItinerarys);
