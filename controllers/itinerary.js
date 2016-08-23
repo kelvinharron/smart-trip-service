@@ -3,13 +3,17 @@ var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyCgrqJvbZQyT6WqOzu4UI7hWA4i0qpNo3U'
 });
 
+function handleErr(err) {
+    if (err) {
+        return next(err);
+    }
+}
+
 // get all itinerarys
 exports.getAllItinerarys = function (req, res) {
     console.log("GET: ALL");
     Itinerary.find(function (err, itinerary) {
-        if (err) {
-            return next (err);
-        }
+        handleErr(err);
         if (itinerary.length == 0) {
             console.log("No itinerarys to display")
         } else {
@@ -23,9 +27,7 @@ exports.getItinerary = function (req, res, next) {
     console.log("GET: SINGLE");
 
     Itinerary.find({_id: req.params._id}, function (err, itinerary) {
-        if (err) {
-            return next(err);
-        }
+        handleErr(err);
         if (itinerary == null) {
             console.log("No itinerarys to display")
         } else {
@@ -42,9 +44,7 @@ exports.createItinerary = function (req, res, next) {
         tripCity: googleMapsClient.place()
     });
     itinerary.save(function (err) {
-        if (err) {
-            return next(err);
-        }
+        handleErr(err);
         return res.send(itinerary);
     });
 }
@@ -58,9 +58,7 @@ exports.updateItinerary = function (req, res, next) {
         startDate: Date.now(),
         endDate: Date.now()
     }, function (err, itinerary) {
-        if (err) {
-            return next(err);
-        }
+        handleErr(err);
         res.json(itinerary);
     });
 }
@@ -69,9 +67,7 @@ exports.updateItinerary = function (req, res, next) {
 exports.deleteItinerary = function (req, res, next) {
     console.log("DELETE: " + req.body._id);
     Itinerary.remove({_id: req.params._id}, function (err) {
-        if (err) {
-            return next(err);
-        }
+        handleErr(err);
         res.json({message: "Itinerary was deleted"})
     });
 }
