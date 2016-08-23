@@ -11,9 +11,10 @@ var userSchema = mongoose.Schema({
         required: true
     },
     email: {
-        type: Date,
-        default: Date.now()
+        type: String,
+        unique: true,
+        required: true
     }
-});
+})
 
-var User = module.exports = mongoose.model("User", userSchema);
+var user = module.exports = mongoose.model('User', userSchema);

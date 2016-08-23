@@ -15,6 +15,7 @@ exports.getAllItinerarys = function (req, res) {
         handleErr(err);
         if (itinerary.length == 0) {
             console.log("No itinerarys to display")
+            res.json(itinerary);
         } else {
             res.json(itinerary);
         }
