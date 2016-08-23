@@ -11,7 +11,6 @@ function handleErr(err) {
 
 // get all itinerarys
 exports.getAllItinerarys = function (req, res) {
-    console.log("GET: ALL");
     Itinerary.find(function (err, itinerary) {
         handleErr(err);
         if (itinerary.length == 0) {
@@ -23,9 +22,7 @@ exports.getAllItinerarys = function (req, res) {
 }
 
 // get a single itinerary based on Id
-exports.getItinerary = function (req, res, next) {
-    console.log("GET: SINGLE");
-
+exports.getItinerary = function (req, res) {
     Itinerary.find({_id: req.params._id}, function (err, itinerary) {
         handleErr(err);
         if (itinerary == null) {
@@ -37,8 +34,7 @@ exports.getItinerary = function (req, res, next) {
 }
 
 // creating a new itinerary
-exports.createItinerary = function (req, res, next) {
-    console.log("POST: ");
+exports.createItinerary = function (req, res) {
     var itinerary = new Itinerary({
         tripName: req.body.tripName,
         tripCity: googleMapsClient.place()
@@ -50,8 +46,7 @@ exports.createItinerary = function (req, res, next) {
 }
 
 // updating an itinerary
-exports.updateItinerary = function (req, res, next) {
-    console.log("PUT: " + req.body._id);
+exports.updateItinerary = function (req, res) {
     Itinerary.update({_id: req.params._id}, {
         tripName: req.body.tripName,
         tripCity: req.body.tripCity,
@@ -64,8 +59,7 @@ exports.updateItinerary = function (req, res, next) {
 }
 
 // deleting an itinerary
-exports.deleteItinerary = function (req, res, next) {
-    console.log("DELETE: " + req.body._id);
+exports.deleteItinerary = function (req, res) {
     Itinerary.remove({_id: req.params._id}, function (err) {
         handleErr(err);
         res.json({message: "Itinerary was deleted"})
