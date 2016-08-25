@@ -25,7 +25,7 @@ exports.getAllEvents = function (req, res) {
 exports.createEvent = function (req, res) {
     var event = new Event({
         eventName: req.body.tripName,
-        eventLocation: googleMapsClient.place()
+        eventLocation: req.body.tripCity
     });
     event.save(function (err) {
         handleErr(err);

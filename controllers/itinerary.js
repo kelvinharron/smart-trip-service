@@ -38,7 +38,7 @@ exports.getItinerary = function (req, res) {
 exports.createItinerary = function (req, res) {
     var itinerary = new Itinerary({
         tripName: req.body.tripName,
-        tripCity: googleMapsClient.place()
+        tripCity: req.body.tripCity
     });
     itinerary.save(function (err) {
         handleErr(err);

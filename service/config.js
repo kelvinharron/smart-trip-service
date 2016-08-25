@@ -1,6 +1,4 @@
-// =======================
-// config file used to organise data keys ======
-// =======================
+/****** config for keys/values that do not change ******/
 module.exports = {
     'LOCALHOST' : '54321',
     'googleMapsKey' : "AIzaSyCgrqJvbZQyT6WqOzu4UI7hWA4i0qpNo3U", // google maps API key
