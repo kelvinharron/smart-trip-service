@@ -1,7 +1,6 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-
 var itinerarySchema = new Schema({
     tripName: {
         type: String,
@@ -19,4 +18,3 @@ var itinerarySchema = new Schema({
 });
 
 module.exports = mongoose.model("Itinerary", itinerarySchema);
-

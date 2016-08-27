@@ -6,14 +6,13 @@ var express = require('express'),
     morgan = require('morgan'),
     config = require('./service/config');
 
-// connect to mongo database
+// connection to mongo database
 mongoose.connect(config.url);
 
-// morgan used to log REST activity from the express server
+// morgan acts as logger, gives response times on restful api calls
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-// middleware controller
 app.use(require('./controllers'));
 
 //var foursquare = require('node-foursquare')(foursquareConfig);
