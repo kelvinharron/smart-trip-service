@@ -1,22 +1,22 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
-var itinerarySchema = mongoose.Schema({
+
+var itinerarySchema = new Schema({
     tripName: {
         type: String,
         required: true
+
     },
     tripCity: {
         type: String,
         required: true
     },
-    startDate: {
-        type: Date,
-        default: Date.now()
-    },
-    endDate: {
+    dateCreated: {
         type: Date,
         default: Date.now()
     }
 });
 
-var Itinerary = module.exports = mongoose.model("Itinerary", itinerarySchema);
+module.exports = mongoose.model("Itinerary", itinerarySchema);
+
