@@ -5,7 +5,6 @@ var itinerarySchema = new Schema({
     tripName: {
         type: String,
         required: true
-
     },
     tripCity: {
         type: String,

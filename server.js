@@ -10,7 +10,7 @@ var express = require('express'),
 mongoose.connect(config.url);
 
 // morgan acts as logger, gives response times on restful api calls
-app.use(morgan('dev'));
+app.use(morgan('ACTIVITY LOGGER: :method :url STATUS CODE: :status :response-time ms DATE+TIME: :date[web]'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(require('./controllers'));
