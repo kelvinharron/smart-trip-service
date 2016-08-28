@@ -1,28 +1,22 @@
 /* node dependencies */
 var express = require('express'),
     app = express(),
+    session = require('express-session'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     morgan = require('morgan'),
     config = require('./service/config');
 
 // connection to mongo database
-mongoose.connect(config.url);
+mongoose.connect(config.URL);
 
 // morgan acts as logger, gives response times on restful api calls
-app.use(morgan('ACTIVITY LOGGER: :method :url STATUS CODE: :status :response-time ms DATE+TIME: :date[web]'));
+app.use(morgan('ACTIVITY LOGGER | METHOD = :method. URL = :url. STATUS = :status. RESPONSE TIME = :response-time ms. DATE+TIME = :date[web].'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(session({secret: config.SECRET, resave: false, saveUninitialized: true}));
 app.use(require('./controllers'));
 
-//var foursquare = require('node-foursquare')(foursquareConfig);
-var foursquareConfig = {
-    'secrets': {
-        'clientId': '4RZ2AQUMEPIP0FKT4F10FFQC00RGNRYWZTYSGXGHLN3A1XXP',
-        'clientSecret': 'O33RMB0UHY5SIJUTPVQZOIWW1X0K020RPZRWZRTDBEEAZKSV',
-        'redirectUrl': 'http://localhost:54321/foursquare'
-    }
-};
 
 /* start server! */
 app.listen(config.LOCALHOST, function () {

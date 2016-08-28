@@ -1,12 +1,7 @@
 var Event = require('../models/event');
-var googleMapsClient = require('@google/maps').createClient({
-    key: 'AIzaSyCgrqJvbZQyT6WqOzu4UI7hWA4i0qpNo3U'
-});
 
 function handleErr(err) {
-    if (err) {
-        return next(err);
-    }
+    if (err) return next(err);
 }
 
 // get all itinerarys

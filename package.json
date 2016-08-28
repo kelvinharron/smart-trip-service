@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "smarttravel",
   "main": "server.js",
   "version": "0.0.1",
   "repository": {
@@ -7,8 +7,7 @@
     "url": "https://github.com/kelvinharron/majorproject.git"
   },
   "dependencies": {
-    "@google/maps": "^0.1.0",
-    "bcrypt-nodejs": "0.0.3",
+    "bcrypt": "*",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
@@ -17,11 +16,6 @@
     "mongoose": "^4.5.9",
     "morgan": "^1.7.0",
     "node-foursquare": "^0.3.0",
-    "nodemon": "^1.10.2",
-    "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^4.0.0",
-    "socket.io": "^1.4.8",
-    "winston": "^2.2.0"
+    "nodemon": "^1.10.2"
   }
 }

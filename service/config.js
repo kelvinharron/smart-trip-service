@@ -1,7 +1,7 @@
 /****** config for keys/values that do not change ******/
 module.exports = {
     'LOCALHOST' : '54321',
-    'googleMapsKey' : "AIzaSyCgrqJvbZQyT6WqOzu4UI7hWA4i0qpNo3U", // google maps API key
-    'secret' : 'penguinsrule', // used when creating and verifying JSON web tokens
-    'url' : 'mongodb://localhost/itineraryapp' // link to mongo database
+    'GOOGLE_MAPS_KEY' : "AIzaSyCgrqJvbZQyT6WqOzu4UI7hWA4i0qpNo3U", // google maps API key
+    'SECRET' : 'penguinsrule', // used when creating and verifying JSON web tokens
+    'URL' : 'mongodb://localhost/itineraryapp' // link to mongo database
 }
