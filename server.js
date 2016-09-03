@@ -10,6 +10,7 @@ var express = require('express'),
     config = require('./service/config');
 
 // connection to mongo database
+mongoose.Promise = global.Promise;
 mongoose.connect(config.url);
 
 // morgan acts as logger, gives response times on restful api calls

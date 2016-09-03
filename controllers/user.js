@@ -1,6 +1,5 @@
 var mongoose = require('mongoose'),
     User = require('../models/user'),
-    validator = require('express-validator'),
     express = require('express'),
     router = express.Router();
 
@@ -9,33 +8,46 @@ function handleErr(err, next) {
     if (err) return next(err);
 }
 
+function validator(req, res, next) {
+    console.log("Validating email and password request");
+    req.check('email', 'Invalid Email').isEmail();
+    req.check('password', 'Invalid Password ! Must be at least 8 alphanumeric').len(10, 100);
+    req.check('password', 'Invalid Password ! Must be alphanumeric').isAlphanumeric();
+    var errors = req.validationErrors(true);
+    if (errors) {
+        console.log(errors)
+        res.status(400).json();
+    } else {
+        console.log("Looks good, next");
+        next();
+    }
+};
 
 // Create a new user
-router.post('/register', function (req, res, next) {
-    User.findOne({'email': req.body.email}.exec, function (err, user) {
+router.post('/register', validator, function (req, res, next) {
+    User.findOne({'email': req.body.email}, function (err, user) {
         handleErr(err, next);
-        console.log("Checking if email unique:" + user)
+        console.log("Now checking if email is unique");
         if (user) {
-            console.log("USER ALREADY IN DB");
-            res.json(409, {err: 'Email already in use'});
-            return true
+            console.log("Email already in use");
+            res.status(409).json();
+            return
         } else {
-            console.log("CREATE NEW USER")
-            var email = req.body.email
-            var password = req.body.password;
+            console.log("Create a new user!");
             var newUser = new User();
-            newUser.email = email;
-            newUser.password = password;
+            newUser.email = req.body.email;
+            newUser.password = req.body.password;
             newUser.save(function (err) {
                 handleErr(err, next);
                 res.json(200);
+
             })
         }
     })
 });
 
 // authenticate is creating a token, so we post
-router.post('/login', function (req, res, next) {
+router.post('/login', validator, function (req, res, next) {
     var email = req.body.email;
     var password = req.body.password;
 
