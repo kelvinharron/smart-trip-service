@@ -8,9 +8,8 @@ function handleErr(err, next) {
         return next(err);
     }
 }
-
 router.get('/', function (req, res, next) {
-    Itinerary.find({}).exec(function (err, itinerary) {
+    Itinerary.find({}).lean().exec(function (err, itinerary) {
         handleErr(err, next);
         if (itinerary.length == 0) {
             console.log("not found")
@@ -38,6 +37,7 @@ router.post('/', function (req, res, next) {
     });
     itinerary.save(function (err) {
         handleErr(err, next);
+
         return res.json(itinerary);
     })
 });
