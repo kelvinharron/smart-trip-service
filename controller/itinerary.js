@@ -1,5 +1,5 @@
 var mongoose = require('mongoose'),
-    Itinerary = require('../models/itinerary'),
+    Itinerary = require('../model/itinerary'),
     express = require('express'),
     router = express.Router();
 

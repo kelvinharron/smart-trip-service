@@ -1,29 +1,21 @@
-/* node dependencies */
-var express = require('express'),
-    app = express(),
+// Node dependencies
+var express = require('express'), // Routing middleware
+    app = express(), // Express function tied to app reference
     session = require('express-session'),
     bodyParser = require('body-parser'),
-    mongoose = require('mongoose'),
     expressValidator = require('express-validator'),
+    database = require('./service/database'),
     morgan = require('morgan'),
-    auth = require('./service/auth.json'),
-    config = require('./service/config');
+    config = require('./service/settings');
 
-// connection to mongo database
-mongoose.Promise = global.Promise;
-mongoose.connect(config.url);
-
-// morgan acts as logger, gives response times on restful api calls
-app.use(morgan(config.morgan_setup));
+app.use(morgan(config.morgan.format));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
-app.use(session({secret: auth.secret, resave: false, saveUninitialized: true}));
-app.use(require('./controllers'));
+app.use(session({secret: config.auth.secret, resave: false, saveUninitialized: true}));
+app.use(require('./controller'));
 
-/* start server! */
-app.listen(config.localhost_port, function () {
-    console.log("Server running on http://localhost:" + config.localhost_port);
+app.listen(config.server.port, function () {
+    console.log("Server running on http://localhost:" + config.server.port);
 });
-
 

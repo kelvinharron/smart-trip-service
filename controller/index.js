@@ -7,7 +7,8 @@ var express = require('express'),
   //  audience: ''
 //});
 
-/* list of current route controllers */
+/* list of current route controller */
+router.use('/api/venue', require('./venue'));
 router.use('/api/itinerary', require('./itinerary'));
 router.use('/api/user', require('./user'));
 

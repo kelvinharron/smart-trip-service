@@ -1,6 +1,0 @@
-{
-  "localhost_port": "54321",
-  "google_maps_key": "AIzaSyD1O213LeJYDURP4UISrgMKH6dnEAPHJnQ",
-  "morgan_setup": "| METHOD = :method. URL = :url. STATUS = :status. RESPONSE TIME = :response-time ms. DATE+TIME = :date[web].",
-  "url": "mongodb://localhost/itineraryapp"
-}
