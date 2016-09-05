@@ -9,7 +9,7 @@ var express = require('express'),
 
 /* list of current route controller */
 router.use('/api/venue', require('./venue'));
-router.use('/api/itinerary', require('./trip'));
+router.use('/api/trip', require('./trip'));
 router.use('/api/user', require('./user'));
 
 /* display home page */

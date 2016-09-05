@@ -29,7 +29,7 @@ var mongoose = require('mongoose'),
  *  If the password is incorrect, return a 400 to the user.
  */
 router.get('/', function (req, res, next) {
-    Itinerary.find({}).lean().exec(function (err, itinerary) {
+    Trip.find({}).lean().exec(function (err, itinerary) {
         handleErr(err, next);
         if (itinerary.length == 0) {
             console.log("not found")
