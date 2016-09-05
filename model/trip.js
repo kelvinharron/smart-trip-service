@@ -1,7 +1,12 @@
+/**
+ *  model/trip.js - model holds schema required by controller/trip for creating a list/itinerary of venues.
+ */
+
+// Import required modules for database ops and validation
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var itinerarySchema = new Schema({
+var tripSchema = new Schema({
     tripName: {
         type: String,
         required: true
@@ -16,4 +21,4 @@ var itinerarySchema = new Schema({
     }
 });
 
-module.exports = mongoose.model("Itinerary", itinerarySchema);
+module.exports = mongoose.model("Trip", tripSchema);
