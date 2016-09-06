@@ -3,7 +3,6 @@
  *
  *  Node is based on a module loading system where modules are imported to grant specific functionality.
  *  If we need to load one module multiple times we do not sustain a performance hit as modules are cached after 1st load.
- *  Requires are done using the single var pattern.
  *
  *  The modules being used include:
  *  @param express: middleware application framework that will be used extensively for setting up API routes

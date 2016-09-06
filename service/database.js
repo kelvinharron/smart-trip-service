@@ -26,9 +26,9 @@ function establishDatabaseConnection() {
         console.log('Mongoose connection established to ' + config.database.port);
     });
 
-// For if the connection throws up an error
-    mongoose.connection.on('error', function (err) {
-        console.error('ERROR: Mongoose connection issue ' + err);
+// For if the connection throws up an responses
+    mongoose.connection.on('responses', function (err) {
+        console.responses('ERROR: Mongoose connection issue ' + err);
     });
 
 // For when the connection is disconnected

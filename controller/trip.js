@@ -4,18 +4,15 @@
  *  retrieving a trip
  *  updating a trip
  *  deleting a trip
- *  get single trip by : DEPRECATED
+ *  get single trip by ID - DEPRECATED
  */
 
 // Import required modules for database ops and routing
 var mongoose = require('mongoose'),
     Trip = require('../model/trip'),
+    config = require('../service/settings'),
     express = require('express'),
-    router = express.Router(),
-    HTTP_SUCCESS_RESPONSE_CODE = 200,
-    HTTP_CONFLICT_RESPONSE_CODE = 409,
-    HTTP_BAD_RESPONSE_CODE = 400,
-    HTTP_UNAUTH_RESPONSE_CODE = 401;
+    router = express.Router();
 
 /**
  *  Get all Itineraries route - HTTP POST method
@@ -29,12 +26,12 @@ var mongoose = require('mongoose'),
  *  If the password is incorrect, return a 400 to the user.
  */
 router.get('/', function (req, res, next) {
-    Trip.find({}).lean().exec(function (err, itinerary) {
+    Trip.find({}).lean().exec(function (err, trip) {
         handleErr(err, next);
         if (itinerary.length == 0) {
             console.log("not found")
         } else {
-            res.json(itinerary);
+            res.json(trip);
         }
     })
 });
@@ -82,10 +79,10 @@ router.delete('/:_id', function (req, res, next) {
 
 /**
  *
- * Simple error handler function that slightly improves code readability in the api routes.
+ * Simple responses handler function that slightly improves code readability in the api routes.
  *
  * @param err thrown by service
- * @param next return error without crashing service
+ * @param next return responses without crashing service
  * @returns {*}
  */
 function handleErr(err, next) {

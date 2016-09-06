@@ -8,14 +8,9 @@
 // Import required modules for database ops with user model and routing with express.
 var mongoose = require('mongoose'),
     User = require('../model/user'), // require user model so we can perform database queries on it
+    config = require('../service/settings'),
     express = require('express'),
-    router = express.Router(),
-    MINIMUM_PASSWORD_LENGTH = 10,
-    MAXIMUM_PASSSWORD_LENGTH = 72, // bcrypt only uses 72 characters of a string for encryption
-    HTTP_SUCCESS_RESPONSE_CODE = 200,
-    HTTP_CONFLICT_RESPONSE_CODE = 409,
-    HTTP_BAD_RESPONSE_CODE = 400,
-    HTTP_UNAUTH_RESPONSE_CODE = 401;
+    router = express.Router();
 
 /**
  *  Signup route - HTTP POST method
@@ -32,7 +27,7 @@ router.post('/signup', userValidation, function (req, res, next) {
         handleErr(err, next);
         console.log("Now checking if email is unique");
         if (user) {
-            res.status(HTTP_CONFLICT_RESPONSE_CODE).send('Email already in use');
+            res.status(config.http.CONFLICT_RESPONSE_CODE).send(config.responses.EMAIL_USED);
         } else {
             console.log("Create a new user!");
             var newUser = new User();
@@ -40,7 +35,7 @@ router.post('/signup', userValidation, function (req, res, next) {
             newUser.password = req.body.password;
             newUser.save(function (err) {
                 handleErr(err, next);
-                res.status(HTTP_SUCCESS_RESPONSE_CODE).send('Successfully Registered your account.');
+                res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.SIGNUP_SUCCESS);
             })
         }
     })
@@ -62,15 +57,15 @@ router.post('/login', userValidation, function (req, res, next) {
         handleErr(err, next);
         console.log("Checking if email exists in database");
         if (!user) {
-            res.status(HTTP_BAD_RESPONSE_CODE).send();
+            res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
         } else {
             user.comparePassword(req.body.password, function (err, isMatch) {
                 if (err) throw err;
                 if (req.body.password && isMatch == true) {
                     req.session.user = user;
-                    res.status(HTTP_SUCCESS_RESPONSE_CODE).send();
+                    res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.LOGIN_SUCCESS);
                 } else {
-                    res.status(HTTP_BAD_RESPONSE_CODE).send();
+                    res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
                 }
             })
         }
@@ -79,10 +74,10 @@ router.post('/login', userValidation, function (req, res, next) {
 
 /**
  *
- * Simple error handler function that slightly improves code readability in the api routes.
+ * Simple responses handler function that slightly improves code readability in the api routes.
  *
  * @param err thrown by service
- * @param next return error without crashing service
+ * @param next return responses without crashing service
  * @returns {*}
  */
 function handleErr(err, next) {
@@ -99,11 +94,11 @@ function handleErr(err, next) {
  */
 function userValidation(req, res, next) {
     req.check('email', 'Invalid Email').isEmail();
-    req.check('password', 'Invalid Password ! Must be at least 10 characters').len(MINIMUM_PASSWORD_LENGTH, MAXIMUM_PASSSWORD_LENGTH);
+    req.check('password', 'Invalid Password ! Must be at least 10 characters').len(config.validation.MINIMUM_PASSWORD_LENGTH, config.validation.MAXIMUM_PASSSWORD_LENGTH);
     var validationErrors = req.validationErrors(true);
     if (validationErrors) {
         console.log(validationErrors);
-        res.status(HTTP_BAD_RESPONSE_CODE).send("Please enter a valid email address and a password that has at least 10 characters");
+        res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
     } else {
         console.log("Validation is good, next");
         next();
@@ -116,9 +111,9 @@ function userValidation(req, res, next) {
  */
 router.get('/dashboard', function (req, res) {
     if (!req.session.user) {
-        res.status(HTTP_UNAUTH_RESPONSE_CODE).send(); // unauthorised
+        res.status(config.http.UNAUTH_RESPONSE_CODE).send(); // unauthorised
     }
-    res.status(HTTP_SUCCESS_RESPONSE_CODE).send("Log in SUCCESS");
+    res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.LOGIN_SUCCESS);
 });
 
 // Object returns access to all routes when required by other node js files

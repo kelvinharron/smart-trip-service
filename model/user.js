@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     validate = require('mongoose-validate'),
     bcrypt = require('bcrypt'),
-    SALT_WORK_FACTOR = 10; // bcrypt hashing algorithm
+    config = require('../service/settings'); // bcrypt hashing algorithm
 
 /**
  *  Creating a schema which is an object defining a MongoDB collection.
@@ -43,7 +43,7 @@ var userSchema = new Schema({
 userSchema.pre('save', function (next) {
     var user = this;
     if (!user.isModified('password')) return next();
-    bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+    bcrypt.genSalt(config.database.SALT_WORK_FACTOR, function (err, salt) {
         if (err) return next(err);
         bcrypt.hash(user.password, salt, function (err, hash) {
             if (err) return next(err);
@@ -57,7 +57,7 @@ userSchema.pre('save', function (next) {
  * Comparator method used when a user attempts to login to an existing account.
  *
  * @param candidatePassword the password from the user login request
- * @param callback to next route, carry error without crashing
+ * @param callback to next route, carry responses without crashing
  */
 userSchema.methods.comparePassword = function (candidatePassword, callback) {
     bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
