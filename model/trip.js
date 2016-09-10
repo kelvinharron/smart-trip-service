@@ -9,11 +9,23 @@ var mongoose = require('mongoose'),
 var tripSchema = new Schema({
     tripName: {
         type: String,
-        required: true
+        required: true,
+        default: "My trip"
     },
     tripCity: {
         type: String,
         required: true
+    },
+    venues: {
+        type: Array,
+        ref: 'Venue'
+    },
+    startDate: {
+        type: Date,
+        default: Date.now()
+    },
+    endDate: {
+        type: Date
     },
     dateCreated: {
         type: Date,

@@ -9,11 +9,26 @@ var mongoose = require('mongoose'),
 
 
 var venueSchema = new Schema({
-    venueName: String,
-    venueType: [],
-    venueAddress: String,
-    venueLatitude: String,
-    venueLongitude: String
+    venueName: {
+        type: String
+    },
+    venueType: {
+        type: Array,
+        default: "art"
+    },
+    venueAddress: {
+        type: String
+    },
+    venueLatitude: {
+        type: String
+    },
+    venueLongitude: {
+        type: String
+    },
+    dateCreated: {
+        type: Date,
+        default: Date.now()
+    }
 });
 
-module.exports = mongoose.model('Event', venueSchema);
+module.exports = mongoose.model('Venue', venueSchema);

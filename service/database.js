@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
     config = require('../service/settings');
 
 /**
- * Exported function that handles the various stages of the database,
+ * Exported function that handles MongoDB database connection logic using mongoose drivers,
  * from the connection to the database port
  * to any errors that might result of attempting to connect (not running database locally)
  * to informing us of a successful disconnect once the service terminates.

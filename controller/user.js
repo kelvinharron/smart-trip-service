@@ -33,6 +33,7 @@ router.post('/signup', userValidation, function (req, res, next) {
             var newUser = new User();
             newUser.email = req.body.email;
             newUser.password = req.body.password;
+            newUser.firstLogin = true;
             newUser.save(function (err) {
                 handleErr(err, next);
                 res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.SIGNUP_SUCCESS);
@@ -59,18 +60,24 @@ router.post('/login', userValidation, function (req, res, next) {
         if (!user) {
             res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
         } else {
-            user.comparePassword(req.body.password, function (err, isMatch) {
-                if (err) throw err;
-                if (req.body.password && isMatch == true) {
-                    req.session.user = user;
-                    res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.LOGIN_SUCCESS);
-                } else {
-                    res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
-                }
-            })
+            comparePasswords(req, res, user);
         }
     })
 });
+
+function comparePasswords(req, res, user, next) {
+    user.comparePassword(req.body.password, function (err, isMatch) {
+        if (err) throw err;
+        if (req.body.password && isMatch == true) {
+            req.session.user = user;
+            res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.LOGIN_SUCCESS);
+            return;
+        } else {
+            res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
+            next();
+        }
+    })
+};
 
 /**
  *
@@ -99,6 +106,7 @@ function userValidation(req, res, next) {
     if (validationErrors) {
         console.log(validationErrors);
         res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
+        return;
     } else {
         console.log("Validation is good, next");
         next();
@@ -107,7 +115,7 @@ function userValidation(req, res, next) {
 
 /**
  * NOT USED IN APP
- * prototype route, only allows user access if first logged in.
+ * prototype route, only allows user access if log in first.
  */
 router.get('/dashboard', function (req, res) {
     if (!req.session.user) {

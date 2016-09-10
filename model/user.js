@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     validate = require('mongoose-validate'),
     bcrypt = require('bcrypt'),
-    config = require('../service/settings'); // bcrypt hashing algorithm
+    config = require('../service/settings');
 
 /**
  *  Creating a schema which is an object defining a MongoDB collection.
@@ -30,6 +30,10 @@ var userSchema = new Schema({
         type: Boolean,
         default: false,
         required: true
+    },
+    dateCreated: {
+        type: Date,
+        default: Date.now()
     }
 });
 

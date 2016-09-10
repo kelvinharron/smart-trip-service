@@ -31,6 +31,12 @@ app.use(expressValidator());
 app.use(session({secret: config.auth.secret, resave: false, saveUninitialized: true}));
 app.use(require('./controller'));
 
+// log error with startup
+app.on('error', function (err) {
+    console.log("Error starting server middleware:");
+    console.log(err);
+});
+
 // Start point of the application
 app.listen(config.server.port, function () {
     console.log("Server running on http://localhost:" + config.server.port);

@@ -39,8 +39,7 @@ var config = {
         BAD_EMAIL_PASSWORD: 'Please enter a valid email address and password',
         EMAIL_USED: 'Email already in use. Please choose another',
         LOGIN_SUCCESS: 'Welcome back!',
-        SIGNUP_SUCCESS: 'Successfully created your account',
-
+        SIGNUP_SUCCESS: 'Successfully created your account'
     }
 };
 
