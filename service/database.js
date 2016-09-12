@@ -4,7 +4,6 @@
  *
  *  Closes connection on service termination.
  */
-
 var mongoose = require('mongoose'),
     config = require('../service/settings');
 

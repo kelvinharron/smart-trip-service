@@ -28,52 +28,65 @@ var mongoose = require('mongoose'),
 router.get('/', function (req, res, next) {
     Trip.find({}).lean().exec(function (err, trip) {
         handleErr(err, next);
-        if (itinerary.length == 0) {
-            console.log("not found")
+        if (trip.length == 0) {
+            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
+            return;
         } else {
+            res.status(config.http.SUCCESS_RESPONSE_CODE);
             res.json(trip);
         }
-    })
+    });
 });
 
-router.get('/:_id', function (req, res, next) {
-    Itinerary.findById(req.params._id, function (err, trip) {
+router.get('/:tripName', function (req, res, next) {
+    Trip.find({tripName: req.body.tripName}, function (err, trip) {
         handleErr(err, next);
         if (trip == null) {
-            console.log("not found");
+            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
+            return;
         } else {
+            res.status(config.http.SUCCESS_RESPONSE_CODE);
             res.json(trip);
         }
-    })
+    });
 });
 
-router.post('/', function (req, res, next) {
+/**
+ * Create trip route - HTTP POST method
+ * url accessed by app = api/trip/
+ *
+ *
+ */
+router.post('/', tripValidation, function (req, res, next) {
     var trip = new Trip({
         tripName: req.body.tripName,
-        tripCity: req.body.tripCity
+        tripCity: req.body.tripCity,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate
     });
     trip.save(function (err) {
         handleErr(err, next);
-
         return res.json(trip);
     })
 });
 
-router.put('/:_id', function (req, res, next) {
-    Trip.update({_id: req.params._id}, {
+router.put('/:tripName', function (req, res, next) {
+    console.log("hello there kelvin");
+    Trip.findOneAndUpdate({tripName: req.body.tripName}, {
         tripName: req.body.tripName,
         tripCity: req.body.tripCity,
         dateCreated: Date.now()
     }, function (err, trip) {
+        console.log("HELLO?");
         handleErr(err, next);
-        res.json(trip);
+        res.status(trip);
     })
 });
 
 router.delete('/:_id', function (req, res, next) {
-    Trip.remove({_id: req.params._id}, function (err) {
+    Trip.findOneAndRemove({tripName: req.body.tripName}, function (err) {
         handleErr(err, next);
-        res.json({message: "Trip removed"})
+        res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.TRIP_DELETED_SUCCESS);
     })
 });
 
@@ -88,6 +101,26 @@ router.delete('/:_id', function (req, res, next) {
 function handleErr(err, next) {
     if (err) return next(err);
 }
+
+/**
+ * Validates trip create requests by checking if tripname and trip city is valid using ExpressValidator
+ * Sends a HTTP 400 response to the user if invalid else invokes next route handler
+ *
+ * @param req user request
+ * @param res service response
+ * @param next invokes the next route handler
+ */
+function tripValidation(req, res, next) {
+    req.check('tripName', 'Empty trip name').notEmpty();
+    req.check('tripCity', 'Empty city name').notEmpty();
+    var validationErrors = req.validationErrors(true);
+    if (validationErrors) {
+        res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_TRIP_DETAILS);
+        return;
+    } else {
+        next();
+    }
+};
 
 // Object returns access to all routes when required by other node js files
 module.exports = router;

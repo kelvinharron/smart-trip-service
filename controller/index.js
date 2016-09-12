@@ -2,6 +2,11 @@ var express = require('express'),
     jwt = require('express-jwt'),
     router = express.Router();
 
+/**
+ * Unsuccesfully attempting to fortify all routes with the javascript web token auth method
+ *
+ *
+ */
 //var jwtCheck = jwt({
     //secret: new Buffer(auth.secret, 'base64'),
   //  audience: ''

@@ -25,11 +25,11 @@ var mongoose = require('mongoose'),
 router.post('/signup', userValidation, function (req, res, next) {
     User.findOne({'email': req.body.email}, function (err, user) {
         handleErr(err, next);
-        console.log("Now checking if email is unique");
+        //console.log("Now checking if email is unique");
         if (user) {
             res.status(config.http.CONFLICT_RESPONSE_CODE).send(config.responses.EMAIL_USED);
         } else {
-            console.log("Create a new user!");
+            //console.log("Create a new user!");
             var newUser = new User();
             newUser.email = req.body.email;
             newUser.password = req.body.password;
@@ -56,7 +56,7 @@ router.post('/signup', userValidation, function (req, res, next) {
 router.post('/login', userValidation, function (req, res, next) {
     User.findOne({email: req.body.email}, function (err, user) {
         handleErr(err, next);
-        console.log("Checking if email exists in database");
+       // console.log("Checking if email exists in database");
         if (!user) {
             res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
         } else {
@@ -104,11 +104,11 @@ function userValidation(req, res, next) {
     req.check('password', 'Invalid Password ! Must be at least 10 characters').len(config.validation.MINIMUM_PASSWORD_LENGTH, config.validation.MAXIMUM_PASSSWORD_LENGTH);
     var validationErrors = req.validationErrors(true);
     if (validationErrors) {
-        console.log(validationErrors);
+       // console.log(validationErrors);
         res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
         return;
     } else {
-        console.log("Validation is good, next");
+       // console.log("Validation is good, next");
         next();
     }
 };

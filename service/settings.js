@@ -33,13 +33,17 @@ var config = {
         SUCCESS_RESPONSE_CODE: 200,
         CONFLICT_RESPONSE_CODE: 409,
         BAD_RESPONSE_CODE: 400,
-        UNAUTH_RESPONSE_CODE: 401
+        UNAUTH_RESPONSE_CODE: 401,
+        NOTFOUND_RESPONSE_CODE: 404
     },
     responses: {
+        TRIP_DELETED_SUCCESS: "Trip was deleted",
         BAD_EMAIL_PASSWORD: 'Please enter a valid email address and password',
+        BAD_TRIP_DETAILS: 'Please fill in a trip name and city',
         EMAIL_USED: 'Email already in use. Please choose another',
         LOGIN_SUCCESS: 'Welcome back!',
-        SIGNUP_SUCCESS: 'Successfully created your account'
+        SIGNUP_SUCCESS: 'Successfully created your account',
+        NOT_FOUND: 'Not found'
     }
 };
 

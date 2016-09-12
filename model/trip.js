@@ -16,10 +16,6 @@ var tripSchema = new Schema({
         type: String,
         required: true
     },
-    venues: {
-        type: Array,
-        ref: 'Venue'
-    },
     startDate: {
         type: Date,
         default: Date.now()
