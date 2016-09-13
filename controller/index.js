@@ -3,14 +3,16 @@ var express = require('express'),
     router = express.Router();
 
 /**
- * Unsuccesfully attempting to fortify all routes with the javascript web token auth method
+ * Unsuccessful attempt to fortify all routes with the javascript web token auth method
+ * Idea is to fortify all routes except signup/login with stateless token system.
+ * Integrates into express middleware, should stack on middleware layer as auth
  *
- *
+ *  TODO: Introduce module and test
  */
-//var jwtCheck = jwt({
-    //secret: new Buffer(auth.secret, 'base64'),
-  //  audience: ''
-//});
+var jwtCheck = jwt({
+    secret: new Buffer('penguinsrule', 'base64'),
+    audience: ''
+});
 
 /* list of current route controller */
 router.use('/api/venue', require('./venue'));

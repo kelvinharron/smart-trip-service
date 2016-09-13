@@ -5,6 +5,7 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
+    config = require('../service/settings'),
     validate = require('mongoose-validate');
 
 
@@ -13,8 +14,7 @@ var venueSchema = new Schema({
         type: String
     },
     venueType: {
-        type: Array,
-        default: "art"
+        type: String, enum: config.google.venueTypeEnums
     },
     venueAddress: {
         type: String

@@ -52,7 +52,7 @@ describe('-- User Signup --', function () {
             });
         });
         done();
-    });
+     });
 
     it('should succesfully register a new user', function (done) {
         api.post('/api/user/signup')
