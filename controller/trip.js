@@ -32,8 +32,7 @@ router.get('/', function (req, res, next) {
             res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
             return;
         } else {
-            res.status(config.http.SUCCESS_RESPONSE_CODE);
-            res.json(trip);
+            res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip);
         }
     });
 });
@@ -45,8 +44,7 @@ router.get('/:tripName', function (req, res, next) {
             res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
             return;
         } else {
-            res.status(config.http.SUCCESS_RESPONSE_CODE);
-            res.json(trip);
+            res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip);
         }
     });
 });
@@ -66,18 +64,16 @@ router.post('/', tripValidation, function (req, res, next) {
     });
     trip.save(function (err) {
         handleErr(err, next);
-        return res.json(trip);
+        res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.TRIP_CREATED_SUCCESS);
     })
 });
 
 router.put('/:tripName', function (req, res, next) {
-    console.log("hello there kelvin");
     Trip.findOneAndUpdate({tripName: req.body.tripName}, {
         tripName: req.body.tripName,
         tripCity: req.body.tripCity,
         dateCreated: Date.now()
     }, function (err, trip) {
-        console.log("HELLO?");
         handleErr(err, next);
         res.status(trip);
     })
@@ -91,7 +87,6 @@ router.delete('/:_id', function (req, res, next) {
 });
 
 /**
- *
  * Simple responses handler function that slightly improves code readability in the api routes.
  *
  * @param err thrown by service

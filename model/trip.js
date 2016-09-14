@@ -17,11 +17,10 @@ var tripSchema = new Schema({
         required: true
     },
     startDate: {
-        type: Date,
-        default: Date.now()
+        type: String
     },
     endDate: {
-        type: Date
+        type: String
     },
     dateCreated: {
         type: Date,
