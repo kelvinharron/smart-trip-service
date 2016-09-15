@@ -15,7 +15,7 @@ var mongoose = require('mongoose'),
     router = express.Router();
 
 /**
- *  Get all Itineraries route - HTTP POST method
+ *  Get all trips route - HTTP GET method
  *  url accessed by app = api/user/login
  *
  *  Takes userValidation function in argument which is performed when route accessed.
@@ -37,17 +37,7 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.get('/:tripName', function (req, res, next) {
-    Trip.find({tripName: req.body.tripName}, function (err, trip) {
-        handleErr(err, next);
-        if (trip == null) {
-            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
-            return;
-        } else {
-            res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip);
-        }
-    });
-});
+
 
 /**
  * Create trip route - HTTP POST method
@@ -68,14 +58,38 @@ router.post('/', tripValidation, function (req, res, next) {
     })
 });
 
-router.put('/:tripName', function (req, res, next) {
-    Trip.findOneAndUpdate({tripName: req.body.tripName}, {
+/**
+ * GET A single route - HTTP GET method
+ * url accessed by app = api/trip//"tripName"
+ *
+ * Tripname parameter used in mongoose search query.
+ *
+ * If the trip is found, return all details of the trip otherwise send a not found response.
+ */
+router.get('/:tripName', function (req, res, next) {
+    Trip.findOne({tripName: req.params.tripName}, function (err, trip) {
+        handleErr(err, next);
+        if (trip == null) {
+            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
+        } else {
+            res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip);
+        }
+    });
+});
+
+/**
+ * UPDATE a single route - HTTP PUT method
+ * url accessed by app = api/trip/"tripname"
+ */
+router.put('/:tripName', tripValidation, function (req, res, next) {
+    Trip.findOneAndUpdate({tripName: req.params.tripName}, {
         tripName: req.body.tripName,
         tripCity: req.body.tripCity,
-        dateCreated: Date.now()
+        startDate: req.body.startDate,
+        endDate: req.body.endDate
     }, function (err, trip) {
         handleErr(err, next);
-        res.status(trip);
+        res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip)
     })
 });
 
