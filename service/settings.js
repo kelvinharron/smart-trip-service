@@ -41,6 +41,8 @@ var config = {
         NOTFOUND_RESPONSE_CODE: 404
     },
     responses: {
+        VENUE_CREATED_SUCCESS: "Venue was created",
+        VENUE_DELETED_SUCCESS: "Venue was deleted",
         TRIP_CREATED_SUCCESS: "Trip was created",
         TRIP_DELETED_SUCCESS: "Trip was deleted",
         BAD_EMAIL_PASSWORD: 'Please enter a valid email address and password',

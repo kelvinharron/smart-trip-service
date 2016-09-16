@@ -4,17 +4,18 @@
 
 // Import required modules for database ops and validation
 var mongoose = require('mongoose'),
+    userSchema = require('../model/user'),
+    venueSchema = require('../model/venue'),
     Schema = mongoose.Schema;
 
 var tripSchema = new Schema({
     tripName: {
         type: String,
-        required: true,
         default: "My trip"
     },
     tripCity: {
         type: String,
-        required: true
+        default: "Belfast"
     },
     startDate: {
         type: String
@@ -22,6 +23,8 @@ var tripSchema = new Schema({
     endDate: {
         type: String
     },
+    tripAuthor: [userSchema],
+    tripVenues: [venueSchema],
     dateCreated: {
         type: Date,
         default: Date.now()
@@ -29,3 +32,4 @@ var tripSchema = new Schema({
 });
 
 module.exports = mongoose.model("Trip", tripSchema);
+

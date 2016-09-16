@@ -9,6 +9,8 @@
 
 // Import required modules for database ops and routing
 var mongoose = require('mongoose'),
+    Venue = require('../model/venue'),
+    User = require('../model/user'),
     Trip = require('../model/trip'),
     config = require('../service/settings'),
     express = require('express'),
@@ -28,15 +30,13 @@ var mongoose = require('mongoose'),
 router.get('/', function (req, res, next) {
     Trip.find({}).lean().exec(function (err, trip) {
         handleErr(err, next);
-        if (trip.length == 0) {
-            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
-            return;
-        } else {
+        if (trip.length != 0) {
             res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip);
+        } else {
+            return
         }
     });
 });
-
 
 
 /**
@@ -46,17 +46,40 @@ router.get('/', function (req, res, next) {
  *
  */
 router.post('/', tripValidation, function (req, res, next) {
-    var trip = new Trip({
+
+    var newTrip = new Trip({
         tripName: req.body.tripName,
         tripCity: req.body.tripCity,
         startDate: req.body.startDate,
-        endDate: req.body.endDate
+        endDate: req.body.endDate,
+        tripAuthor: "kelvinnharron@gmail.com"
     });
-    trip.save(function (err) {
+    newTrip.save(function (err) {
         handleErr(err, next);
         res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.TRIP_CREATED_SUCCESS);
     })
 });
+
+router.get('/:tripName', function (req, res, next) {
+    Trip.findOne({
+        tripName: req.params.tripName,
+    }, function (err, trip) {
+        handleErr(err, next);
+        if (trip == null) {
+            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
+        } else {
+            res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip);
+        }
+    });
+});
+
+/*var venue = new Venue({
+ venueName: req.body.venueName,
+ venueType: req.body.venueType,
+ venueLatitude: req.body.venueLatitude,
+ venueLongitude: req.body.venueLongitude
+
+ });*/
 
 /**
  * GET A single route - HTTP GET method
@@ -93,8 +116,10 @@ router.put('/:tripName', tripValidation, function (req, res, next) {
     })
 });
 
-router.delete('/:_id', function (req, res, next) {
-    Trip.findOneAndRemove({tripName: req.body.tripName}, function (err) {
+router.delete('/delete/', function (req, res, next) {
+    Trip.remove({
+        tripName: req.body.tripName
+    }, function (err) {
         handleErr(err, next);
         res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.TRIP_DELETED_SUCCESS);
     })

@@ -26,14 +26,8 @@ var express = require('express'),
 // The following section of code configures our middleware and adds them to the express stack
 app.use(morgan(config.morgan.format));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false})); // **USED FOR POSTMAN API TESTING ONLY**
-app.use(expressValidator({
-    customValidators: {
-        isGeo: function (value) {
-            return Geo.isGeo(value);
-        },
-    }
-}));
+app.use(bodyParser.urlencoded({extended: true})); // **USED FOR POSTMAN API TESTING ONLY**
+app.use(expressValidator({}));
 app.use(session({secret: config.auth.secret, resave: false, saveUninitialized: true}));
 app.use(require('./controller'));
 

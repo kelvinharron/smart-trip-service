@@ -4,6 +4,7 @@
  */
 
 var mongoose = require('mongoose'),
+    userSchema = require('../model/user'),
     Schema = mongoose.Schema,
     config = require('../service/settings'),
     validate = require('mongoose-validate');
@@ -25,6 +26,7 @@ var venueSchema = new Schema({
     venueLongitude: {
         type: String
     },
+    createdByTrip: [userSchema],
     dateCreated: {
         type: Date,
         default: Date.now()

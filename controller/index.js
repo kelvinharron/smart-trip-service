@@ -15,14 +15,13 @@ var jwtCheck = jwt({
 });
 
 /* list of current route controller */
+router.use('/api/user', require('./user'));
 router.use('/api/venue', require('./venue'));
 router.use('/api/trip', require('./trip'));
-router.use('/api/user', require('./user'));
 
 /* display home page */
 router.get('/status', function (req, res) {
     res.json({message: "Server online"})
 });
-
 
 module.exports = router;

@@ -4,6 +4,7 @@
 
 // Import required modules for database ops and validation
 var mongoose = require('mongoose'),
+    tripSchema = require('../model/trip'),
     Schema = mongoose.Schema,
     validate = require('mongoose-validate'),
     bcrypt = require('bcrypt'),
@@ -25,6 +26,7 @@ var userSchema = new Schema({
         type: String,
         required: true
     },
+    userTrips: [tripSchema],
     // TODO: set to true once user signs up to allow offline mode???
     firstLogin: {
         type: Boolean,

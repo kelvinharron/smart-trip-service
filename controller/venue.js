@@ -8,11 +8,12 @@ var mongoose = require('mongoose'),
         key: config.google.mapsKey
     });
 
-router.post('/search', venueValidation, function (req, res) {
+router.post('/search', venueValidation, function (req, res, next) {
     var venueType = req.body.venueType;
     var userLocation = req.body.latitude + ',' + req.body.longitude;
 
     googleSearchRequest(venueType, userLocation, function (result) {
+        console.log(result)
         if (result === null) {
             res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NO_VENUES_FOUND);
         }
@@ -20,6 +21,20 @@ router.post('/search', venueValidation, function (req, res) {
         res.status(config.http.SUCCESS_RESPONSE_CODE).send(json);
     });
 });
+
+router.post('/', function (req, res, next) {
+    var venueType = req.body.venueType;
+    var userLocation = req.body.latitude + ',' + req.body.longitude;
+
+    googleSearchRequest(venueType, userLocation, function (result) {
+        console.log("hello result")
+        if(result === null) {
+            res.status(config.http.NOTFOUND_RESPONSE_CODE).send("OOPS")
+        }
+        var json = result
+        res.status(config.http.SUCCESS_RESPONSE_CODE).send(json)
+    })
+})
 
 /**
  * Get a list of results (max 10) from google places API.
@@ -76,8 +91,8 @@ function venueValidation(req, res, next) {
     req.check('longitude', 'Invalid coordinates for lng').isFloat();
     var validationErrors = req.validationErrors(true);
     if (validationErrors) {
+        console.log("VALIDATION ERROR")
         res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_VENUE_DETAILS);
-        return;
     } else {
         next();
     }
