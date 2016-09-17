@@ -53,7 +53,7 @@ var config = {
         LOGIN_SUCCESS: 'Welcome back!',
         SIGNUP_SUCCESS: 'Successfully created your account',
         NOT_FOUND: 'Not found',
-        NO_VENUES_FOUND: 'No venues available, please check your location and try again'
+        NO_VENUES_FOUND: "Try searching again with another word"
     }
 };
 

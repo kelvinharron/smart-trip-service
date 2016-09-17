@@ -44,7 +44,7 @@ function googleSearchRequest(venueType, userLocation, callback) {
         },
         function (err, response) {
             handleErr(err);
-            if (response.json.status == config.google.ZER0_RESULTS) {
+            if (response.json.status == 'ZERO_RESULTS') {
                 return callback(null);
             } else {
                 var result = [];
