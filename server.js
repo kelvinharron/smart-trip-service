@@ -30,7 +30,6 @@ app.use(bodyParser.urlencoded({extended: true})); // **USED FOR POSTMAN API TEST
 app.use(expressValidator({}));
 app.use(session({secret: config.auth.secret, resave: false, saveUninitialized: true}));
 app.use(require('./controller'));
-
 // log error with startup
 app.on('error', function (err) {
     console.log("Error starting server middleware:");

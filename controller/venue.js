@@ -8,33 +8,18 @@ var mongoose = require('mongoose'),
         key: config.google.mapsKey
     });
 
-router.post('/search', venueValidation, function (req, res, next) {
+router.post('/search', venueValidation, function (req, res) {
     var venueType = req.body.venueType;
     var userLocation = req.body.latitude + ',' + req.body.longitude;
 
     googleSearchRequest(venueType, userLocation, function (result) {
-        console.log(result)
-        if (result === null) {
+        if (result == null) {
             res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NO_VENUES_FOUND);
         }
-        var json = result;
-        res.status(config.http.SUCCESS_RESPONSE_CODE).send(json);
+        res.status(config.http.SUCCESS_RESPONSE_CODE).send(result);
     });
 });
 
-router.post('/', function (req, res, next) {
-    var venueType = req.body.venueType;
-    var userLocation = req.body.latitude + ',' + req.body.longitude;
-
-    googleSearchRequest(venueType, userLocation, function (result) {
-        console.log("hello result")
-        if(result === null) {
-            res.status(config.http.NOTFOUND_RESPONSE_CODE).send("OOPS")
-        }
-        var json = result
-        res.status(config.http.SUCCESS_RESPONSE_CODE).send(json)
-    })
-})
 
 /**
  * Get a list of results (max 10) from google places API.
@@ -59,11 +44,11 @@ function googleSearchRequest(venueType, userLocation, callback) {
         },
         function (err, response) {
             handleErr(err);
-            if (response.json.results.length == null) {
+            if (response.json.status == config.google.ZER0_RESULTS) {
                 return callback(null);
             } else {
                 var result = [];
-                for (var loop = config.google.MIN_LOOP; loop <= config.google.MAX_LOOP; loop++) {
+                for (var loop = config.google.MIN_LOOP; loop < response.json.results.length; loop++) {
                     var obj = response.json.results[loop];
                     result.push({
                         name: obj.name,
