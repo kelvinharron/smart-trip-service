@@ -42,7 +42,7 @@ var config = {
         NOTFOUND_RESPONSE_CODE: 404
     },
     responses: {
-        VENUE_CREATED_SUCCESS: "Venue was created",
+        VENUE_CREATED_SUCCESS: "Venue added to your trip",
         VENUE_DELETED_SUCCESS: "Venue was deleted",
         TRIP_CREATED_SUCCESS: "Trip was created",
         TRIP_DELETED_SUCCESS: "Trip was deleted",

@@ -2,7 +2,6 @@
  *  model/trip.js - model holds schema required by controller/trip for creating a list/itinerary of venues.
  */
 
-// Import required modules for database ops and validation
 var mongoose = require('mongoose'),
     userSchema = require('../model/user'),
     venueSchema = require('../model/venue'),

@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
         key: config.google.mapsKey
     });
 
-router.post('/search', venueValidation, function (req, res) {
+router.post('/search', googleValidation, function (req, res) {
     var venueType = req.body.venueType;
     var userLocation = req.body.latitude + ',' + req.body.longitude;
 
@@ -18,6 +18,52 @@ router.post('/search', venueValidation, function (req, res) {
         }
         res.status(config.http.SUCCESS_RESPONSE_CODE).send(result);
     });
+});
+
+router.post('/', venueValidation, function (req, res, next) {
+    var newVenue = new Venue({
+        venueName: req.body.venueName,
+        venueAddress: req.body.venueAddress,
+        venueLatitude: req.body.venueLatitude,
+        venueLongitude: req.body.venueLongitude
+    });
+    newVenue.save(function (err) {
+        handleErr(err, next);
+        res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.VENUE_CREATED_SUCCESS);
+    });
+});
+
+router.get('/', function (req, res, next) {
+    Venue.find({}).lean().exec(function (err, venue) {
+        handleErr(err, next);
+        if (venue.length != 0) {
+            res.status(config.http.SUCCESS_RESPONSE_CODE).send(venue);
+        } else {
+            return
+        }
+    });
+});
+
+router.get('/:venueName', function (req, res, next) {
+    Venue.findOne({
+        venueName: req.params.venueName
+    }, function (err, venue) {
+        handleErr(err, next);
+        if (venue == null) {
+            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
+        } else {
+            res.status(config.http.SUCCESS_RESPONSE_CODE).send(venue);
+        }
+    });
+});
+
+router.delete('/', function (req, res, next) {
+    Venue.remove({
+        venueName: req.body.venueName
+    }, function (err) {
+        handleErr(err, next)
+        res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.VENUE_DELETED_SUCCESS);
+    })
 });
 
 
@@ -63,20 +109,38 @@ function googleSearchRequest(venueType, userLocation, callback) {
 };
 
 /**
- * Validates a venue search request by checking if venuename is not empty and that geo data are float values
+ * Validates a venue save request by checking if
+ * @param req
+ * @param res
+ * @param next
+ */
+function venueValidation(req, res, next) {
+    req.check('venueName', 'Invalid name').notEmpty();
+    req.check('venueAddress', 'Invalid address').notEmpty();
+    req.check('venueLatitude', 'Invalid coordinates for latitude').isFloat();
+    req.check('venueLongitude', 'Invalid coordinates for longitude').isFloat();
+    var validationErrors = req.validationErrors(true);
+    if (validationErrors) {
+        res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_VENUE_DETAILS);
+    } else {
+        next();
+    }
+}
+
+/**
+ * Validates a venue search request by checking if venuetype is not empty and that geo data are float values
  * Sends a HTTP 400 response to the the user if invalid else invokes next route handler
  *
  * @param req user request
  * @param res service response
  * @param next invokes the next route handler
  */
-function venueValidation(req, res, next) {
+function googleValidation(req, res, next) {
     req.check('venueType', 'Error invalid venue type').notEmpty();
-    req.check('latitude', 'Invalid coordinates for lat').isFloat();
-    req.check('longitude', 'Invalid coordinates for lng').isFloat();
+    req.check('latitude', 'Invalid coordinates for latitude').isFloat();
+    req.check('longitude', 'Invalid coordinates for longitude').isFloat();
     var validationErrors = req.validationErrors(true);
     if (validationErrors) {
-        console.log("VALIDATION ERROR")
         res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_VENUE_DETAILS);
     } else {
         next();
@@ -90,7 +154,7 @@ function venueValidation(req, res, next) {
  * @param next return responses without crashing service
  * @returns {*}
  */
-function handleErr(err) {
+function handleErr(err, next) {
     if (err) return next(err);
 }
 

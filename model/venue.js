@@ -14,9 +14,6 @@ var venueSchema = new Schema({
     venueName: {
         type: String
     },
-    venueType: {
-        type: String, enum: config.google.venueTypeEnums
-    },
     venueAddress: {
         type: String
     },

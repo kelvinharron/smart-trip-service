@@ -116,7 +116,7 @@ router.put('/:tripName', tripValidation, function (req, res, next) {
     })
 });
 
-router.delete('/delete/', function (req, res, next) {
+router.delete('/', function (req, res, next) {
     Trip.remove({
         tripName: req.body.tripName
     }, function (err) {
