@@ -4,7 +4,7 @@
  */
 
 var mongoose = require('mongoose'),
-    userSchema = require('../model/user'),
+    tripSchema = require('../model/trip'),
     Schema = mongoose.Schema,
     config = require('../service/settings'),
     validate = require('mongoose-validate');
@@ -12,18 +12,22 @@ var mongoose = require('mongoose'),
 
 var venueSchema = new Schema({
     venueName: {
-        type: String
+        type: String,
+        required: true
     },
     venueAddress: {
-        type: String
+        type: String,
+        required: true
     },
     venueLatitude: {
-        type: String
+        type: String,
+        required: true
     },
     venueLongitude: {
-        type: String
+        type: String,
+        required: true
     },
-    createdByTrip: [userSchema],
+    savedToTrip: [tripSchema],
     dateCreated: {
         type: Date,
         default: Date.now()

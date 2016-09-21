@@ -10,11 +10,13 @@ var mongoose = require('mongoose'),
 var tripSchema = new Schema({
     tripName: {
         type: String,
-        default: "My trip"
+        required: true,
+        default: "My First Trip"
     },
     tripCity: {
         type: String,
-        default: "Belfast"
+        required: true,
+        default: "Belfast, United Kingdom"
     },
     startDate: {
         type: String

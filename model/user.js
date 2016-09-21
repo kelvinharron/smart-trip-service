@@ -24,7 +24,9 @@ var userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        minlength: config.validation.MINIMUM_PASSWORD_LENGTH,
+        maxlength: config.validation.MAXIMUM_PASSSWORD_LENGTH
     },
     userTrips: [tripSchema],
     // TODO: set to true once user signs up to allow offline mode???

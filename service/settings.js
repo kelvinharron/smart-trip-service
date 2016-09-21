@@ -8,7 +8,7 @@
 var config = {
     server: {
         host: 'localhost', // local machine
-        port: '54321' // port set on my local machine
+        port: '7892' // port set on my local machine
     },
     database: {
         SALT_WORK_FACTOR: 10,

@@ -1,3 +1,10 @@
+/**
+ *  controller/venue.js - Controller requires venue model, holds API end points and business logic for:
+ *  searching for a venue
+ *  saving a venue
+ *  deleting a venue
+ */
+
 // Import required modules for database ops with user model and routing with express.
 var mongoose = require('mongoose'),
     Venue = require('../model/venue'),
@@ -8,18 +15,38 @@ var mongoose = require('mongoose'),
         key: config.google.mapsKey
     });
 
+/**
+ * Search route - HTTP POST method
+ * url accessed by app = api/venue/search
+ *
+ * This route is used to conduct searches to the Google Places API.
+ * A validation function checks the req.body details and if valid,
+ * passes them to a Google Search method that returns a callback.
+ *
+ * The callback either returns null or data that we format before sending to the user.
+ */
 router.post('/search', googleValidation, function (req, res) {
-    var venueType = req.body.venueType;
+    var venueType = req.body.venueQuery;
     var userLocation = req.body.latitude + ',' + req.body.longitude;
 
     googleSearchRequest(venueType, userLocation, function (result) {
         if (result == null) {
             res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NO_VENUES_FOUND);
         }
+        console.log(result)
         res.status(config.http.SUCCESS_RESPONSE_CODE).send(result);
     });
 });
 
+/**
+ * Save venue route - HTTP POST method
+ * url accesed by app = api/venue/
+ *
+ * This route is used to save a selected venue from the search route.
+ * A validation function checks the req.body details and if valid,
+ * creates a new venue object that is saved to the database.
+ * Success message sent to client on completion.
+ */
 router.post('/', venueValidation, function (req, res, next) {
     var newVenue = new Venue({
         venueName: req.body.venueName,
@@ -33,17 +60,31 @@ router.post('/', venueValidation, function (req, res, next) {
     });
 });
 
+/**
+ * GET all venue route - HTTP GET methdo
+ * url accesed by app = api/venue
+ *
+ * This route is used to get a list of all of the venues saved to the database.
+ * Returns success code and sends list to client, otherwise return if no venues available.
+ */
 router.get('/', function (req, res, next) {
     Venue.find({}).lean().exec(function (err, venue) {
         handleErr(err, next);
         if (venue.length != 0) {
             res.status(config.http.SUCCESS_RESPONSE_CODE).send(venue);
         } else {
-            return
+            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
         }
     });
 });
 
+/**
+ * GET a single venue route - HTTP GET method
+ *
+ * This route gets a single venue from the database, from the request parameter.
+ *
+ * Returns a single venue.
+ */
 router.get('/:venueName', function (req, res, next) {
     Venue.findOne({
         venueName: req.params.venueName
@@ -57,6 +98,13 @@ router.get('/:venueName', function (req, res, next) {
     });
 });
 
+/**
+ * DELETE a single venue route - HTTP DELETE method
+ *
+ * This route deletes a single venue from the database, from the selected request body.
+ *
+ * Returns a success message.
+ */
 router.delete('/', function (req, res, next) {
     Venue.remove({
         venueName: req.body.venueName
@@ -89,8 +137,9 @@ function googleSearchRequest(venueType, userLocation, callback) {
             location: userLocation
         },
         function (err, response) {
+            console.log(response.json.results);
             handleErr(err);
-            if (response.json.status == 'ZERO_RESULTS') {
+            if (response.json.status == config.google.ZER0_RESULTS) {
                 return callback(null);
             } else {
                 var result = [];
@@ -109,10 +158,12 @@ function googleSearchRequest(venueType, userLocation, callback) {
 };
 
 /**
- * Validates a venue save request by checking if
- * @param req
- * @param res
- * @param next
+ * Validates a venue save request by checking if the name and address are not empty
+ * and that the geo coordinates are float values.
+ * Sends an error code if errors are found.
+ * @param req user request
+ * @param res user response
+ * @param next invokes the next route handler
  */
 function venueValidation(req, res, next) {
     req.check('venueName', 'Invalid name').notEmpty();

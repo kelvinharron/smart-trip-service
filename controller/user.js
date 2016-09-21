@@ -1,5 +1,5 @@
 /**
- *  controller/user.js - Controller requires user model, holds all RESTful API end points and business logic for:
+ *  controller/user.js - Controller requires user model, holds API end points and business logic for:
  *  user login
  *  user signup
  *  user dashboard: DEPRECATED
@@ -25,15 +25,14 @@ var mongoose = require('mongoose'),
 router.post('/signup', userValidation, function (req, res, next) {
     User.findOne({'email': req.body.email}, function (err, user) {
         handleErr(err, next);
-        //console.log("Now checking if email is unique");
         if (user) {
             res.status(config.http.CONFLICT_RESPONSE_CODE).send(config.responses.EMAIL_USED);
         } else {
-            //console.log("Create a new user!");
-            var newUser = new User();
-            newUser.email = req.body.email;
-            newUser.password = req.body.password;
-            newUser.firstLogin = true;
+            var newUser = new User({
+                email: req.body.email,
+                password: req.body.email,
+                firstLogin: true
+            });
             newUser.save(function (err) {
                 handleErr(err, next);
                 res.status(config.http.SUCCESS_RESPONSE_CODE).send(config.responses.SIGNUP_SUCCESS);
@@ -56,7 +55,6 @@ router.post('/signup', userValidation, function (req, res, next) {
 router.post('/login', userValidation, function (req, res, next) {
     User.findOne({email: req.body.email}, function (err, user) {
         handleErr(err, next);
-       // console.log("Checking if email exists in database");
         if (!user) {
             res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
         } else {
@@ -74,7 +72,6 @@ function comparePasswords(req, res, user, next) {
             return;
         } else {
             res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
-            next();
         }
     })
 };
@@ -104,11 +101,9 @@ function userValidation(req, res, next) {
     req.check('password', 'Invalid Password ! Must be at least 10 characters').len(config.validation.MINIMUM_PASSWORD_LENGTH, config.validation.MAXIMUM_PASSSWORD_LENGTH);
     var validationErrors = req.validationErrors(true);
     if (validationErrors) {
-       // console.log(validationErrors);
         res.status(config.http.BAD_RESPONSE_CODE).send(config.responses.BAD_EMAIL_PASSWORD);
         return;
     } else {
-       // console.log("Validation is good, next");
         next();
     }
 };

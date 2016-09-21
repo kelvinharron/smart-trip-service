@@ -1,5 +1,5 @@
 /**
- *  controller/trip.js - Controller requires trip model, holds all RESTful API end points and business logic for:
+ *  controller/trip.js - Controller requires trip model, holds API end points and business logic for:
  *  creating a new trip
  *  retrieving a trip
  *  updating a trip
@@ -33,7 +33,7 @@ router.get('/', function (req, res, next) {
         if (trip.length != 0) {
             res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip);
         } else {
-            return
+            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
         }
     });
 });
@@ -43,6 +43,8 @@ router.get('/', function (req, res, next) {
  * Create trip route - HTTP POST method
  * url accessed by app = api/trip/
  *
+ * This route is used to create new trip objects. First the validation function is used to check the
+ * request details are valid. If so, a new Trip object is created and saved to the database.
  *
  */
 router.post('/', tripValidation, function (req, res, next) {
@@ -52,7 +54,7 @@ router.post('/', tripValidation, function (req, res, next) {
         tripCity: req.body.tripCity,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
-        tripAuthor: "kelvinnharron@gmail.com"
+        tripAuthor: null
     });
     newTrip.save(function (err) {
         handleErr(err, next);
@@ -60,26 +62,6 @@ router.post('/', tripValidation, function (req, res, next) {
     })
 });
 
-router.get('/:tripName', function (req, res, next) {
-    Trip.findOne({
-        tripName: req.params.tripName,
-    }, function (err, trip) {
-        handleErr(err, next);
-        if (trip == null) {
-            res.status(config.http.NOTFOUND_RESPONSE_CODE).send(config.responses.NOT_FOUND);
-        } else {
-            res.status(config.http.SUCCESS_RESPONSE_CODE).send(trip);
-        }
-    });
-});
-
-/*var venue = new Venue({
- venueName: req.body.venueName,
- venueType: req.body.venueType,
- venueLatitude: req.body.venueLatitude,
- venueLongitude: req.body.venueLongitude
-
- });*/
 
 /**
  * GET A single route - HTTP GET method
@@ -101,8 +83,10 @@ router.get('/:tripName', function (req, res, next) {
 });
 
 /**
- * UPDATE a single route - HTTP PUT method
+ * UPDATE a single trip - HTTP PUT method
  * url accessed by app = api/trip/"tripname"
+ *
+ * TODO: Rebuild route as currently not working, test functionality
  */
 router.put('/:tripName', tripValidation, function (req, res, next) {
     Trip.findOneAndUpdate({tripName: req.params.tripName}, {
@@ -116,6 +100,12 @@ router.put('/:tripName', tripValidation, function (req, res, next) {
     })
 });
 
+/**
+ * DELETE a single Trip - HTTP DELETE method
+ * url accessed by app = api/trip//"tripName"
+ *
+ * TripName used from body of request to find and delete the trip.
+ */
 router.delete('/', function (req, res, next) {
     Trip.remove({
         tripName: req.body.tripName

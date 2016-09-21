@@ -1,3 +1,9 @@
+/**
+ *  controller/index.js - Router index for express API end points.
+ *  Allows us to establish and export all of our endpoints to the server.js file,
+ *  which express adds to the middleware stack.
+ */
+
 var express = require('express'),
     jwt = require('express-jwt'),
     router = express.Router();
