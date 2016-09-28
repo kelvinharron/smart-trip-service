@@ -1,6 +1,6 @@
 # Smart Trip Service
 
-Itinerary builder application created for my Masters Individual Project module. 
+Itinerary builder application created for my Masters Individual Project. 
 
 Please see [the iOS companion app I created to act as a view of the service.](https://github.com/kelvinharron/smart-trip-ios)
 
