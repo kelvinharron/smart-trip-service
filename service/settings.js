@@ -8,12 +8,12 @@
 var config = {
     server: {
         host: 'localhost', // local machine
-        port: '7892' // port set on my local machine
+        address: '7892' // address set on my local machine
     },
     database: {
         SALT_WORK_FACTOR: 10,
         promise: 'global.Promise', // promises used for async compute, represents potential values
-        port: 'mongodb://localhost/itineraryapp' // location of the database on my machine
+        address: 'postgres://localhost/smart_trip' // location of the database on my machine
     },
     auth: {
         secret: 'penguinsrule' // Stub value for attempt at json web token integration

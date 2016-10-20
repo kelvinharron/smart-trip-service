@@ -1,48 +1,21 @@
 /**
- *  service/database.js - Used to setup a connection to the mongoDB noSQL database that is used by the service
- *  for persistent storage.
- *
- *  Closes connection on service termination.
+ *  database.js - database service class
  */
-var mongoose = require('mongoose'),
+var pg = require('pg'),
     config = require('../service/settings');
 
-/**
- * Exported function that handles MongoDB database connection logic using mongoose drivers,
- * from the connection to the database port
- * to any errors that might result of attempting to connect (not running database locally)
- * to informing us of a successful disconnect once the service terminates.
- *
- * By exporting the actual function instead of just the module, we do not need to implement it in the app.js
- * only require it as part of our list of modules for it to correctly function.
- */
-function establishDatabaseConnection() {
-// Establish a connection to our database
-    mongoose.connect(config.database.port);
+function setupDatabase() {
+    pg.connect(config.database.address, onConnect);
+    console.log("Connected to Database at " + config.database.address);
+}
 
-// For when the connection is succesfully established
-    mongoose.connection.on('connected', function () {
-        console.log('Mongoose connection established to ' + config.database.port);
-    });
+function onConnect(err, client, done) {
+    if (err) {
+        console.error(err);
+        process.exit(1);
+    }
+    client.end();
+}
 
-// For if the connection throws up an responses
-    mongoose.connection.on('responses', function (err) {
-        console.responses('ERROR: Mongoose connection issue ' + err);
-    });
 
-// For when the connection is disconnected
-    mongoose.connection.on('disconnected', function () {
-        console.log('Mongoose disconnected');
-    });
-
-// If the service terminates, close the connection to our database
-    process.on('SIGINT', function () {
-        mongoose.connection.close(function () {
-            console.log("Mongoose disconnected due to service termination");
-            process.exit(0);
-        });
-    });
-};
-
-// Object returns access to all routes when required by other node js files
-module.exports = establishDatabaseConnection();
+module.exports = setupDatabase();

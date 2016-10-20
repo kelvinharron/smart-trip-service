@@ -7,7 +7,7 @@
 
 // Import required modules for database ops with user model and routing with express.
 var mongoose = require('mongoose'),
-    User = require('../model/user'), // require user model so we can perform database queries on it
+    User = require('../model/deprecated_user'), // require user model so we can perform database queries on it
     config = require('../service/settings'),
     express = require('express'),
     router = express.Router();

@@ -11,11 +11,11 @@
  */
 var chai = require('chai'),
     mongoose = require('mongoose'),
-    User = require('../model/user'),
+    User = require('../model/deprecated_user'),
     should = chai.Should(),
     supertest = require('supertest'),
     config = require('../service/settings'),
-    api = supertest('http://localhost:' + config.server.port);
+    api = supertest('http://localhost:' + config.server.address);
 
 // Test data
 var validEmail = "testemail@gmail.com",
@@ -46,7 +46,7 @@ describe('-- User Signup --', function () {
      * Before each test, connect to the database and delete the valid email so we can use it in multiple test
      */
     before(function (done) {
-        mongoose.connect(config.database.port, function () {
+        mongoose.connect(config.database.address, function () {
             User.findOneAndRemove({email: validEmail}, function (err) {
                 if (err) throw err;
             });

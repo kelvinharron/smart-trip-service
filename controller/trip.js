@@ -10,8 +10,8 @@
 // Import required modules for database ops and routing
 var mongoose = require('mongoose'),
     Venue = require('../model/venue'),
-    User = require('../model/user'),
-    Trip = require('../model/trip'),
+    User = require('../model/deprecated_user'),
+    Trip = require('../model/deprecreated_trip'),
     config = require('../service/settings'),
     express = require('express'),
     router = express.Router();

@@ -13,7 +13,7 @@ var should = require('chai').should(),
     expect = require('chai').expect,
     supertest = require('supertest'),
     config = require('../service/settings'),
-    api = supertest('http://localhost:' + config.server.port);
+    api = supertest('http://localhost:' + config.server.address);
 
 
 describe('Check Server Status ', function () {

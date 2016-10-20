@@ -3,7 +3,7 @@
  */
 
 var mongoose = require('mongoose'),
-    userSchema = require('../model/user'),
+    userSchema = require('deprecated_user'),
     venueSchema = require('../model/venue'),
     Schema = mongoose.Schema;
 

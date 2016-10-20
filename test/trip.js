@@ -11,11 +11,11 @@
  */
 var chai = require('chai'),
     mongoose = require('mongoose'),
-    Trip = require('../model/trip'),
+    Trip = require('../model/deprecreated_trip'),
     should = chai.Should(),
     supertest = require('supertest'),
     config = require('../service/settings'),
-    api = supertest('http://localhost:' + config.server.port);
+    api = supertest('http://localhost:' + config.server.address);
 
 var validTripName = "Trip To Belfast",
     invalidTripName = "",
@@ -33,7 +33,7 @@ var validTripName = "Trip To Belfast",
  */
 describe('-- Trip Create --', function () {
     before(function (done) {
-        mongoose.connect(config.database.port, function () {
+        mongoose.connect(config.database.address, function () {
             Trip.findOneAndRemove({tripName: validTripName}, function (err) {
                 if (err) throw err;
             });

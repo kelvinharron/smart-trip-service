@@ -4,7 +4,7 @@
  */
 
 var mongoose = require('mongoose'),
-    tripSchema = require('../model/trip'),
+    tripSchema = require('deprecreated_trip'),
     Schema = mongoose.Schema,
     config = require('../service/settings'),
     validate = require('mongoose-validate');
